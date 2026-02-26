@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import * as qrcode from 'qrcode-terminal';
 import { Logger } from '@nestjs/common';
 
@@ -9,14 +9,7 @@ export class EvolutionService {
   private readonly timeoutMs = Number(process.env.EVOLUTION_API_TIMEOUT_MS || 5000);
   private readonly retryCount = Number(process.env.EVOLUTION_API_RETRY_COUNT || 2);
 
-  private client = axios.create({
-    baseURL: this.baseUrl,
-    headers: {
-      apikey: this.apiKey,
-      'Content-Type': 'application/json',
-    },
-    timeout: this.timeoutMs,
-  });
+  private client: AxiosInstance;
 
   constructor() {
     this.baseUrl = this.requireEnv('EVOLUTION_API_URL');
