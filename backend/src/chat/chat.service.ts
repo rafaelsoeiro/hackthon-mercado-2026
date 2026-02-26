@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { OpenAIService } from './OpenAI.service';
+import { OpenAIService } from './openai.service';
 import { AudioService } from './audio.service';
 import { EvolutionApiService } from './evolution-api.service';
 
