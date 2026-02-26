@@ -32,7 +32,7 @@ export class OpenAIService {
       });
       return transcription.text;
     } catch (error) {
-      this.logger.error('❌ Erro na transcrição', error);
+      this.logger.error('Erro na transcrição', error);
       throw new Error('Falha ao transcrever áudio.');
     }
   }
@@ -55,7 +55,7 @@ export class OpenAIService {
       await fs.promises.writeFile(filePath, buffer);
       return filePath;
     } catch (error) {
-      this.logger.error('❌ Erro ao gerar áudio (TTS)', error);
+      this.logger.error('Erro ao gerar áudio (TTS)', error);
       throw error;
     }
   }
@@ -63,7 +63,7 @@ export class OpenAIService {
   async generateReply(userId: string, userMessage: string): Promise<string> {
     try {
       const threadId = await this.getOrCreateThread(userId);
-      this.logger.log(`🧵 Thread ID para ${userId}: ${threadId}`);
+      this.logger.log(`Thread ID para ${userId}: ${threadId}`);
 
       // --- CORREÇÃO APLICADA AQUI ---
       const activeRuns = await this.client.beta.threads.runs.list(threadId);
@@ -72,7 +72,7 @@ export class OpenAIService {
       );
 
       if (activeRun) {
-        this.logger.warn(`⚠️ Cancelando run anterior (${activeRun.id})...`);
+        this.logger.warn(`Cancelando run anterior (${activeRun.id})`);
         // Forçamos o tipo para evitar o erro TS2345
         await this.client.beta.threads.runs.cancel(threadId, activeRun.id as any);
         await new Promise(r => setTimeout(r, 1000));
@@ -111,7 +111,7 @@ export class OpenAIService {
 
       return '';
     } catch (error) {
-      this.logger.error('❌ Erro no Assistant', error);
+      this.logger.error('Erro no Assistant', error);
       return 'Estou indisponível no momento.';
     }
   }

@@ -42,7 +42,7 @@ export class ChatController {
       return { status: 'ignored_no_content' };
     }
 
-    this.logger.log(`📩 Mensagem recebida de ${remoteJid} [${isAudio ? 'AUDIO' : 'TEXTO'}]`);
+    this.logger.log(`Mensagem recebida de ${remoteJid} [${isAudio ? 'AUDIO' : 'TEXTO'}]`);
 
     // 5. Delega para o Service
     await this.chatService.processMessage({

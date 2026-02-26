@@ -30,7 +30,7 @@ export class EvolutionApiService {
         )
       );
     } catch (error) {
-      this.logger.error(`❌ Erro no envio de áudio: ${error.response?.data?.message || error.message}`);
+      this.logger.error(`Erro no envio de áudio: ${error.response?.data?.message || error.message}`);
       throw error;
     }
   }
@@ -48,7 +48,7 @@ export class EvolutionApiService {
         )
       );
     } catch (error) {
-      this.logger.error(`❌ Erro no envio de texto: ${error.response?.data?.message || error.message}`);
+      this.logger.error(`Erro no envio de texto: ${error.response?.data?.message || error.message}`);
     }
   }
 

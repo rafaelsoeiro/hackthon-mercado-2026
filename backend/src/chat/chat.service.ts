@@ -47,9 +47,9 @@ export class ChatService {
         // Transcreve usando Whisper
         finalInputText = await this.openAIService.transcribeAudio(tempFilePath);
         
-        this.logger.log(`🎙️ Transcrição: "${finalInputText}"`);
+        this.logger.log(`Transcrição: "${finalInputText}"`);
       } catch (e) {
-        this.logger.error('❌ Falha na transcrição', e);
+        this.logger.error('Falha na transcrição', e);
         return;
       } finally {
         if (tempFilePath) await this.audioService.deleteFile(tempFilePath);
@@ -59,9 +59,9 @@ export class ChatService {
     if (!finalInputText) return;
 
     // 3. Inteligência Artificial
-    this.logger.log(`🤖 Processando entrada: "${finalInputText}"`);
+    this.logger.log(`Processando entrada: "${finalInputText}"`);
     const aiResponse = await this.openAIService.generateReply(data.remoteJid, finalInputText);
-    this.logger.log(`🧠 Resposta Gerada: "${aiResponse}"`);
+    this.logger.log(`Resposta gerada: "${aiResponse}"`);
 
     // 4. Decisão de Formato de Resposta (Texto vs Áudio)
     if (isVoiceInput) {
@@ -73,7 +73,7 @@ export class ChatService {
             // Gera o áudio da resposta (TTS)
             const audioResponsePath = await this.openAIService.textToSpeech(aiResponse);
             
-            this.logger.log(`📤 Enviando resposta em Áudio...`);
+            this.logger.log('Enviando resposta em áudio');
             await this.evolutionApi.sendVoice(data.instance, data.remoteJid, audioResponsePath);
 
             // Limpeza
@@ -86,7 +86,7 @@ export class ChatService {
 
     } else {
         // === FLUXO DE TEXTO (Usuário mandou texto -> Recebe texto) ===
-        this.logger.log(`📤 Enviando resposta em Texto...`);
+        this.logger.log('Enviando resposta em texto');
         
         // Simula digitação baseada no tamanho do texto
         const delay = Math.min(aiResponse.length * 30, 3000);

@@ -1,7 +1,9 @@
 import axios from 'axios';
 import * as qrcode from 'qrcode-terminal';
+import { Logger } from '@nestjs/common';
 
 export class EvolutionService {
+  private readonly logger = new Logger(EvolutionService.name);
   private readonly baseUrl: string;
   private readonly apiKey: string;
 
@@ -66,9 +68,9 @@ async connectInstance(instanceName: string, retries = 5, delayMs = 1000) {
 
   private printQrCode(qrText: string) {
     // O qrcode-terminal recebe o texto do QR
-    console.log('\n=== QR Code para conectar WhatsApp ===\n');
+    this.logger.log('QR Code para conectar WhatsApp');
     qrcode.generate(qrText, { small: true });
-    console.log('\nEscaneie com o WhatsApp para conectar.\n');
+    this.logger.log('Escaneie com o WhatsApp para conectar');
   }
 
   private requireEnv(name: string): string {
