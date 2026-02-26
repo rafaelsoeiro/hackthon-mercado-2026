@@ -1,0 +1,30 @@
+# env files
+.env
+.env.*
+!.env.example
+backend/.env
+backend/.env.*
+!backend/.env.example
+
+# deps
+node_modules
+backend/node_modules
+
+# build outputs
+dist
+backend/dist
+build
+backend/build
+
+# logs
+logs
+*.log
+
+# OS / IDE
+.DS_Store
+.idea
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json

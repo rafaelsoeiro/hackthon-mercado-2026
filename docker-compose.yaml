@@ -1,0 +1,57 @@
+version: '3.3'
+
+services:
+  api:
+    container_name: evo-api-2
+    image: evoapicloud/evolution-api:v2.3.7
+    restart: always
+    ports:
+      - 8083:8080
+    volumes:
+      - evo-instances-2:/evolution/instances
+    networks:
+      - evo-net-2
+    env_file:
+      - .env
+
+  postgres:
+    container_name: postgres-2
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: evo-db
+    volumes:
+      - pg_data-2:/var/lib/postgresql/data
+    networks:
+      - evo-net-2
+      - default
+
+  redis:
+    container_name: redis-2
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6380:6379"
+    networks:
+      - evo-net-2
+      - default
+
+  backend:
+    container_name: hack-backend
+    build: ./backend
+    ports:
+      - 3000:3000
+    env_file:
+      - ./backend/.env
+    networks:
+      - evo-net-2
+
+volumes:
+  evo-instances-2:
+  pg_data-2:
+
+networks:
+  evo-net-2:
+    driver: bridge

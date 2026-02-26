@@ -1,0 +1,20 @@
+# 1. Usando Node 20 LTS
+FROM node:20-alpine
+
+# 2. Diretório de trabalho
+WORKDIR /usr/src/app
+
+# 3. Copia package.json e package-lock.json
+COPY package*.json ./
+
+# 4. Instala dependências
+RUN npm install
+
+# 5. Copia todo o backend
+COPY . .
+
+# 6. Expõe porta
+EXPOSE 3000
+
+# 7. Comando para rodar NestJS em dev (hot reload)
+CMD ["npm", "run", "start:dev"]
