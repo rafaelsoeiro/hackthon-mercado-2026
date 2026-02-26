@@ -13,7 +13,6 @@ export class ChatService {
     private readonly evolutionApi: EvolutionApiService,
   ) {}
 
-  // Handler legado
   async handleIncomingMessage(instance: string, remoteNumber: string, text: string | null, messageId: string | null) {
     return this.processMessage({
       instance,
@@ -32,19 +31,15 @@ export class ChatService {
     pushName: string;
   }) {
     let finalInputText = data.text;
-    const isVoiceInput = !!data.audioBase64; // Flag: É mensagem de voz?
+    const isVoiceInput = !!data.audioBase64;
 
-    // 1. Feedback inicial
     this.evolutionApi.sendPresence(data.instance, data.remoteJid, isVoiceInput ? 'recording' : 'composing');
 
-    // 2. Transcrição (se veio áudio)
     if (isVoiceInput) {
       let tempFilePath: string | null = null;
       try {
-        // Salva arquivo localmente a partir do base64
         tempFilePath = await this.audioService.saveBase64ToOgg(data.audioBase64!);
         
-        // Transcreve usando Whisper
         finalInputText = await this.openAIService.transcribeAudio(tempFilePath);
         
         this.logger.log(`Transcrição: "${finalInputText}"`);
@@ -58,25 +53,19 @@ export class ChatService {
 
     if (!finalInputText) return;
 
-    // 3. Inteligência Artificial
     this.logger.log(`Processando entrada: "${finalInputText}"`);
     const aiResponse = await this.openAIService.generateReply(data.remoteJid, finalInputText);
     this.logger.log(`Resposta gerada: "${aiResponse}"`);
 
-    // 4. Decisão de Formato de Resposta (Texto vs Áudio)
     if (isVoiceInput) {
-        // === FLUXO DE ÁUDIO (Usuário mandou áudio -> Recebe áudio) ===
         try {
-            // Mantém status "gravando..."
             await this.evolutionApi.sendPresence(data.instance, data.remoteJid, 'recording', 3000);
 
-            // Gera o áudio da resposta (TTS)
             const audioResponsePath = await this.openAIService.textToSpeech(aiResponse);
             
             this.logger.log('Enviando resposta em áudio');
             await this.evolutionApi.sendVoice(data.instance, data.remoteJid, audioResponsePath);
 
-            // Limpeza
             await this.audioService.deleteFile(audioResponsePath);
 
         } catch (error) {
@@ -85,10 +74,8 @@ export class ChatService {
         }
 
     } else {
-        // === FLUXO DE TEXTO (Usuário mandou texto -> Recebe texto) ===
         this.logger.log('Enviando resposta em texto');
         
-        // Simula digitação baseada no tamanho do texto
         const delay = Math.min(aiResponse.length * 30, 3000);
         await this.evolutionApi.sendPresence(data.instance, data.remoteJid, 'composing', delay);
         await new Promise(r => setTimeout(r, delay));

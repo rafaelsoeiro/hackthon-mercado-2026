@@ -34,7 +34,6 @@ export class EvolutionService {
       });
       return data;
     } catch (error) {
-      // Ignora erro 400 se a instância já existir
       if (error.response?.status === 400) {
         return { status: 'INSTANCE_EXISTS', instanceName };
       }
@@ -67,7 +66,6 @@ async connectInstance(instanceName: string, retries = 5, delayMs = 1000) {
 
 
   private printQrCode(qrText: string) {
-    // O qrcode-terminal recebe o texto do QR
     this.logger.log('QR Code para conectar WhatsApp');
     qrcode.generate(qrText, { small: true });
     this.logger.log('Escaneie com o WhatsApp para conectar');

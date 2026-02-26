@@ -65,7 +65,6 @@ export class OpenAIService {
       const threadId = await this.getOrCreateThread(userId);
       this.logger.log(`Thread ID para ${userId}: ${threadId}`);
 
-      // --- CORREÇÃO APLICADA AQUI ---
       const activeRuns = await this.client.beta.threads.runs.list(threadId);
       const activeRun = activeRuns.data.find(r => 
         ['queued', 'in_progress', 'requires_action'].includes(r.status)
@@ -73,11 +72,9 @@ export class OpenAIService {
 
       if (activeRun) {
         this.logger.warn(`Cancelando run anterior (${activeRun.id})`);
-        // Forçamos o tipo para evitar o erro TS2345
         await this.client.beta.threads.runs.cancel(threadId, activeRun.id as any);
         await new Promise(r => setTimeout(r, 1000));
       }
-      // -----------------------------
 
       await this.client.beta.threads.messages.create(threadId, {
         role: 'user',

@@ -9,7 +9,6 @@ export class ChatController {
 
   @Post('evolution')
   async handleWebhook(@Body() payload: any) {
-    // 1. Validação básica do evento
     if (payload.event !== 'messages.upsert') {
       return { status: 'ignored' };
     }
@@ -18,15 +17,9 @@ export class ChatController {
     const key = data?.key;
     const message = data?.message;
 
-    // // 2. Ignora mensagens enviadas pelo próprio bot (fromMe)
-    // if (!key || key.fromMe) {
-    //   return { status: 'ignored_from_me' };
-    // }
-
     const remoteJid = key.remoteJid;
-    const isGroup = remoteJid.includes('@g.us'); // Opcional: ignorar grupos se quiser
+    const isGroup = remoteJid.includes('@g.us');
 
-    // 3. Extração de conteúdo
     const text =
       message?.conversation ||
       message?.extendedTextMessage?.text ||
@@ -35,7 +28,6 @@ export class ChatController {
     const messageType = data.messageType;
     const isAudio = messageType === 'audioMessage' || messageType === 'voiceMessage';
     
-    // 4. Pega o Base64 DIRETO do payload (Correção do erro 404/400)
     const audioBase64 = isAudio ? message?.base64 : null;
 
     if (!text && !audioBase64) {
@@ -44,7 +36,6 @@ export class ChatController {
 
     this.logger.log(`Mensagem recebida de ${remoteJid} [${isAudio ? 'AUDIO' : 'TEXTO'}]`);
 
-    // 5. Delega para o Service
     await this.chatService.processMessage({
       instance: instance || 'devTeste',
       remoteJid,

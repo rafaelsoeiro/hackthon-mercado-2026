@@ -8,7 +8,6 @@ export class AudioService {
   private readonly tempDir = path.join(__dirname, '../../tmp');
 
   constructor() {
-    // Garante que a pasta tmp existe
     if (!fs.existsSync(this.tempDir)) {
       fs.mkdirSync(this.tempDir, { recursive: true });
     }
@@ -16,7 +15,6 @@ export class AudioService {
 
   async saveBase64ToOgg(base64Data: string): Promise<string> {
     try {
-      // Remove cabeçalho se existir (ex: "data:audio/ogg;base64,...")
       const cleanBase64 = base64Data.replace(/^data:.*;base64,/, '');
       
       const fileName = `audio-${Date.now()}.ogg`;

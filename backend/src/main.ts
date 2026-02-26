@@ -7,7 +7,6 @@ async function bootstrap() {
 
   app.enableCors();
 
-  // Configura limites maiores para payloads JSON e URL-encoded
   app.use(bodyParser.json({ limit: '2mb' }));
   app.use(bodyParser.urlencoded({ limit: '2mb', extended: true }));
 

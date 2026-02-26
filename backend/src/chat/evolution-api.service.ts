@@ -61,9 +61,7 @@ export class EvolutionApiService {
           { headers: { apikey: this.apiKey } }
         )
       );
-    } catch {
-      // fail silently
-    }
+    } catch {}
   }
 
   private requireEnv(name: string): string {
