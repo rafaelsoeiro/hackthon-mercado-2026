@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Logger } from '@nestjs/common';
+import { Controller, Post, Body, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { ChatService } from './chat.service';
 
 @Controller('chat')
@@ -10,7 +10,7 @@ export class ChatController {
   @Post('evolution')
   async handleWebhook(@Body() payload: any) {
     if (payload.event !== 'messages.upsert') {
-      return { status: 'ignored' };
+      return { status: 'ignored', data: null, error: null };
     }
 
     const { instance, data, sender } = payload;
@@ -31,19 +31,26 @@ export class ChatController {
     const audioBase64 = isAudio ? message?.base64 : null;
 
     if (!text && !audioBase64) {
-      return { status: 'ignored_no_content' };
+      return { status: 'ignored', data: null, error: 'no_content' };
     }
 
     this.logger.log(`Mensagem recebida de ${remoteJid} [${isAudio ? 'AUDIO' : 'TEXTO'}]`);
 
-    await this.chatService.processMessage({
-      instance: instance || 'devTeste',
-      remoteJid,
-      text,
-      audioBase64,
-      pushName: data.pushName,
-    });
-
-    return { status: 'ok' };
+    try {
+      await this.chatService.processMessage({
+        instance: instance || 'devTeste',
+        remoteJid,
+        text,
+        audioBase64,
+        pushName: data.pushName,
+      });
+      return { status: 'ok', data: { accepted: true }, error: null };
+    } catch (error) {
+      this.logger.error('Erro ao processar mensagem', error);
+      throw new HttpException(
+        { status: 'error', data: null, error: 'processing_failed' },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
