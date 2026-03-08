@@ -1,6 +1,28 @@
 # Hackthon Mercado 2026
 
-Backend + Evolution API (WhatsApp) em Docker.
+MVP desenvolvido no Hackathon do Mercado (20–22/01) para apoiar a informatização do Mercado Central de São Luís sem excluir práticas e dinâmicas locais.  
+A proposta foca em tornar dados acionáveis para comerciantes e poder público por meio de um assistente via WhatsApp e um painel analítico, com implementação simples e evolutiva.
+
+## Contexto do Desafio
+O Mercado Central de São Luís é um espaço histórico e cultural que vive um processo de informatização, mas com práticas informais e uma dinâmica própria de comércio. O objetivo não era “digitalizar tudo”, e sim entender como a tecnologia poderia ajudar sem excluir.
+
+## Solução Proposta
+- Assistente de negócios e gestão via WhatsApp, capaz de entender texto e áudio, voltado à gestão financeira dos comerciantes residentes.
+- Painel analítico para a Prefeitura, com dados consolidados sobre o movimento do comércio para apoiar decisões e políticas públicas.
+
+## Stack Técnica
+- Backend: NestJS + TypeScript
+- IA: OpenAI GPT-4.1 (equilíbrio entre qualidade e custo) e GPT-4o (speech-to-text e text-to-speech)
+- Integração WhatsApp: Evolution API
+- Dados e cache: PostgreSQL e Redis
+
+## Impacto Esperado
+- Mais previsibilidade e menos desperdício
+- Negócios mais saudáveis financeiramente
+- Inclusão digital de quem normalmente fica à margem
+
+## Próximos Passos
+Como parte da premiação, houve convite da SEMISPE para evoluir o MVP e trabalhar no desenvolvimento e implantação da solução no Mercado Central no futuro.
 
 ## Requisitos
 - Docker + Docker Compose
